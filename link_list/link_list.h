@@ -33,3 +33,5 @@ list_iterator_t get_next_iterator(list_iterator_t);
 void* get_node_data(list_iterator_t);
 
 link_list_t* reverse_list(link_list_t*);
+
+int free_link_list(link_list_t**);

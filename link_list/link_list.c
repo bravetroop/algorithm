@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "link_list.h"
 
 link_list_t* create_list()
@@ -113,3 +114,29 @@ link_list_t* reverse_list(link_list_t* plist)
     return p;
 }
 */
+
+int free_link_list(link_list_t** pplist)
+{
+	link_list_t* plist = NULL;
+	list_node_t *pnode = NULL, *ptmp = NULL;
+
+	if( (NULL == pplist)
+			|| (NULL == *pplist))
+	{
+		return -1;
+	}
+
+	plist = *pplist;
+	pnode = plist->phead;
+	while(pnode)
+	{
+		ptmp = pnode;
+		pnode = pnode->pnext;
+		free(ptmp);
+	}
+
+	free(plist);
+	*pplist = NULL;
+
+	return 0;
+}
