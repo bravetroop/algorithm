@@ -30,6 +30,6 @@ list_iterator_t get_list_iterator(link_list_t*);
 
 list_iterator_t get_next_iterator(list_iterator_t);
 
-void* get_data(list_iterator_t);
+void* get_node_data(list_iterator_t);
 
 link_list_t* reverse_list(link_list_t*);

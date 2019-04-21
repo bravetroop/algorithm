@@ -80,7 +80,7 @@ list_iterator_t get_next_iterator(list_iterator_t list_it)
 	return it;
 }
 
-void* get_data(list_iterator_t list_it)
+void* get_node_data(list_iterator_t list_it)
 {
 	if(list_it.pnode)
 	{
