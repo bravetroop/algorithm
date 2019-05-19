@@ -38,9 +38,14 @@ int add_list(link_list_t* plist, void* pdata)
 		plist->phead = pnode;
 		plist->ptail = pnode;
 	}
-	else
+	else if(plist->ptail)
 	{
 		plist->ptail->pnext = pnode;
+	}
+	else
+	{
+		free(pnode);
+		return -3;
 	}
 
 	plist->ptail = pnode;
