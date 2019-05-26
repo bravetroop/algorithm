@@ -153,23 +153,28 @@ void check_rehashing(hash_map_t hash_map)
 	if(0 == hash_entry)
 	{
 		++hash_map->rehashidx;
-		return;
+		if(hash_map->rehashidx >= hash_map->table[old_tbl_idx].size)
+		{
+			hash_map->rehashidx = 0;
+		}
+	}
+	else
+	{
+		hash_map->table[old_tbl_idx].bkt[old_rehash_idx] = hash_entry->next;
+
+		insert_value_in_bkt(hash_map, hash_entry->key, hash_entry->u.value);
+		hash_map->funcs.key_destruct(hash_entry->key);
+		hash_map->funcs.value_destruct(hash_entry->u.value);
+		free(hash_entry);
+		if(hash_map->table[old_tbl_idx].used) {
+			--hash_map->table[old_tbl_idx].used;
+		}
 	}
 
-	hash_map->table[old_tbl_idx].bkt[old_rehash_idx] = hash_entry->next;
-
-	insert_value_in_bkt(hash_map, hash_entry->key, hash_entry->u.value);
-	hash_map->funcs.key_destruct(hash_entry->key);
-	hash_map->funcs.value_destruct(hash_entry->u.value);
-	free(hash_entry);
-
-	if(hash_map->table[old_tbl_idx].used) {
-		--hash_map->table[old_tbl_idx].used;
-		if(0 == hash_map->table[old_tbl_idx].used) {
-			hash_map->rehashing = 0;
-			free(hash_map->table[old_tbl_idx].bkt);
-			hash_map->table[old_tbl_idx].bkt = 0;
-		}
+	if (0 == hash_map->table[old_tbl_idx].used) {
+		hash_map->rehashing = 0;
+		free(hash_map->table[old_tbl_idx].bkt);
+		hash_map->table[old_tbl_idx].bkt = 0;
 	}
 }
 
