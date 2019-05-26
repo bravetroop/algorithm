@@ -22,9 +22,15 @@ typedef struct
 	void (*value_destruct)(void* value);
 }hash_funcs;
 
-hash_map_t create_hashmap(hash_funcs* funcs, uint32_t hash_size);
+hash_map_t create_hash_map(hash_funcs* funcs, uint32_t hash_size);
+
+int32_t insert_hash_map(hash_map_t hash_map, void* key, void* value);
+
+void* find_value(hash_map_t hash_map, void* key);
 
 uint32_t hash_map_size(hash_map_t hash_map);
+
+void set_load_refactor(hash_map_t hash_map, float factor);
 
 #ifdef __cplusplus
 }
