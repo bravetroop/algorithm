@@ -32,7 +32,8 @@ typedef struct hash_map
 	float load_factor;
 } hash_map;
 
-static void* find_value_in_bkt(hash_entry * bkt_entry, void* key);
+static void* find_value_in_bkt(hash_map_t hash_map, hash_entry * bkt_entry, void* key);
+static int insert_value_in_bkt(hash_map_t hash_map, void* key, void* value);
 
 hash_map_t create_hash_map(hash_funcs* funcs, uint32_t hash_size)
 {
@@ -82,7 +83,10 @@ int32_t insert_hash_map(hash_map_t hash_map, void* key, void* value)
 		return -2;
 	}
 
-
+	if(0 != insert_value_in_bkt(hash_map, key, value))
+	{
+		return -3;
+	}
 
 	return 0;
 }
@@ -108,7 +112,7 @@ void* find_value(hash_map_t hash_map, void* key)
 		bkt_idx = hash_map->funcs.hash_func(key) & (hash_map->table[old_tbl].size - 1);
 		if(bkt_idx >= hash_map->rehashidx)
 		{
-			value = find_value_in_bkt(hash_map->table[old_tbl].bkt[bkt_idx], key);
+			value = find_value_in_bkt(hash_map, hash_map->table[old_tbl].bkt[bkt_idx], key);
 			if(value)
 				return value;
 		}
@@ -116,18 +120,61 @@ void* find_value(hash_map_t hash_map, void* key)
 
 	//find in current hash map
 	bkt_idx = hash_map->funcs.hash_func(key) &(hash_map->table[tbl_idx].size -1);
-	value = find_value_in_bkt(hash_map->table[tbl_idx].bkt[bkt_idx], key);
+	value = find_value_in_bkt(hash_map, hash_map->table[tbl_idx].bkt[bkt_idx], key);
 
 	return value;
 }
 
-void* find_value_in_bkt(hash_entry * bkt, void* key)
+int insert_value_in_bkt(hash_map_t hash_map, void* key, void* value)
+{
+	uint8_t tbl_idx = 0;
+	uint32_t bkt_idx = 0;
+	hash_entry * bkt_node = 0;
+	hash_entry * new_node = 0;
+
+	if( !hash_map || !key || !value )
+	{
+		return -1;
+	}
+
+	tbl_idx = hash_map->tbl_idx;
+	bkt_idx = hash_map->funcs.hash_func(key) &(hash_map->table[tbl_idx].size -1);
+	bkt_node = hash_map->table[tbl_idx].bkt[bkt_idx];
+
+	new_node = (hash_entry*)malloc(sizeof(hash_entry));
+	if(!new_node)
+	{
+		return -2;
+	}
+
+	new_node->key = hash_map->funcs.key_dump(key);
+	new_node->u.value = hash_map->funcs.value_dump(value);
+	new_node->next = bkt_node;
+
+	hash_map->table[tbl_idx].bkt[bkt_idx] = new_node;
+	++hash_map->table[tbl_idx].used;
+
+	return 0;
+}
+
+void* find_value_in_bkt(hash_map_t hash_map, hash_entry * bkt, void* key)
 {
 	void* pval = 0;
+	hash_entry* pnode = 0;
 
-	if(!bkt || !key)
+	if(!bkt || !key || !hash_map
+			|| !hash_map->funcs.key_cmp)
 	{
 		return pval;
+	}
+
+	for(pnode = bkt; 0 != pnode; pnode = pnode->next)
+	{
+		if(0 == hash_map->funcs.key_cmp(pnode->key, key))
+		{
+			pval = pnode->u.value;
+			break;
+		}
 	}
 
 	return pval;
