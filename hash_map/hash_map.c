@@ -32,8 +32,11 @@ typedef struct hash_map
 	float load_factor;
 } hash_map;
 
+static void check_rehashing(hash_map_t hash_map);
 static void* find_value_in_bkt(hash_map_t hash_map, hash_entry * bkt_entry, void* key);
-static int insert_value_in_bkt(hash_map_t hash_map, void* key, void* value);
+
+static int32_t check_incre_hashtable(hash_map_t hash_map);
+static int32_t insert_value_in_bkt(hash_map_t hash_map, void* key, void* value);
 
 hash_map_t create_hash_map(hash_funcs* funcs, uint32_t hash_size)
 {
@@ -61,6 +64,7 @@ hash_map_t create_hash_map(hash_funcs* funcs, uint32_t hash_size)
 		return 0;
 	}
 	memset(p_hashmap->table[0].bkt, 0, sizeof(hash_entry *) * hash_size);
+	memset(&p_hashmap->table[1], 0, sizeof(hash_table));
 
 	memcpy(&p_hashmap->funcs, funcs, sizeof(hash_funcs));
 	p_hashmap->tbl_idx = 0;
@@ -78,7 +82,9 @@ int32_t insert_hash_map(hash_map_t hash_map, void* key, void* value)
 		return -1;
 	}
 
-	if(find_value(hash_map, key))
+	check_rehashing(hash_map);
+
+	if(0 != find_value(hash_map, key))
 	{
 		return -2;
 	}
@@ -86,6 +92,12 @@ int32_t insert_hash_map(hash_map_t hash_map, void* key, void* value)
 	if(0 != insert_value_in_bkt(hash_map, key, value))
 	{
 		return -3;
+	}
+
+	//rehash
+	if(0 != check_incre_hashtable(hash_map))
+	{
+		return -4;
 	}
 
 	return 0;
@@ -125,17 +137,22 @@ void* find_value(hash_map_t hash_map, void* key)
 	return value;
 }
 
-int insert_value_in_bkt(hash_map_t hash_map, void* key, void* value)
+void check_rehashing(hash_map_t hash_map)
+{
+	if(!hash_map->rehashing)
+	{
+		return;
+	}
+
+
+}
+
+int32_t insert_value_in_bkt(hash_map_t hash_map, void* key, void* value)
 {
 	uint8_t tbl_idx = 0;
 	uint32_t bkt_idx = 0;
 	hash_entry * bkt_node = 0;
 	hash_entry * new_node = 0;
-
-	if( !hash_map || !key || !value )
-	{
-		return -1;
-	}
 
 	tbl_idx = hash_map->tbl_idx;
 	bkt_idx = hash_map->funcs.hash_func(key) &(hash_map->table[tbl_idx].size -1);
@@ -144,7 +161,7 @@ int insert_value_in_bkt(hash_map_t hash_map, void* key, void* value)
 	new_node = (hash_entry*)malloc(sizeof(hash_entry));
 	if(!new_node)
 	{
-		return -2;
+		return -1;
 	}
 
 	new_node->key = hash_map->funcs.key_dump(key);
@@ -157,16 +174,42 @@ int insert_value_in_bkt(hash_map_t hash_map, void* key, void* value)
 	return 0;
 }
 
+int32_t check_incre_hashtable(hash_map_t hash_map)
+{
+	uint32_t hash_size = 0;
+	int tbl_idx = hash_map->tbl_idx;
+
+	if(!hash_map->rehashing
+				&& ((float)hash_map->table[tbl_idx].used/hash_map->table[tbl_idx].size > hash_map->load_factor))
+	{
+		hash_size = hash_map->table[tbl_idx].size * 2;
+
+		//new table
+		tbl_idx = (0 == hash_map->tbl_idx) ? 1 : 0;
+		if (hash_map->table[tbl_idx].bkt) {
+			return -1;
+		}
+
+		hash_map->table[tbl_idx].bkt = (hash_entry **) malloc(sizeof(hash_entry *) * hash_size);
+		if (0 == hash_map->table[tbl_idx].bkt) {
+			return -2;
+		}
+		memset(hash_map->table[tbl_idx].bkt, 0, sizeof(hash_entry *) * hash_size);
+		hash_map->table[tbl_idx].size = hash_size;
+		hash_map->table[tbl_idx].used = 0;
+
+		hash_map->rehashing = 1;
+		hash_map->tbl_idx = tbl_idx;
+		hash_map->rehashidx = 0;
+	}
+
+	return 0;
+}
+
 void* find_value_in_bkt(hash_map_t hash_map, hash_entry * bkt, void* key)
 {
 	void* pval = 0;
 	hash_entry* pnode = 0;
-
-	if(!bkt || !key || !hash_map
-			|| !hash_map->funcs.key_cmp)
-	{
-		return pval;
-	}
 
 	for(pnode = bkt; 0 != pnode; pnode = pnode->next)
 	{
