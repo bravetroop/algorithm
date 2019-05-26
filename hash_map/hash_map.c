@@ -168,6 +168,7 @@ void check_rehashing(hash_map_t hash_map)
 		if(0 == hash_map->table[old_tbl_idx].used) {
 			hash_map->rehashing = 0;
 			free(hash_map->table[old_tbl_idx].bkt);
+			hash_map->table[old_tbl_idx].bkt = 0;
 		}
 	}
 }
