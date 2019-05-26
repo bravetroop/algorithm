@@ -1,7 +1,5 @@
 #include "hash_map.h"
 
-#define HASH_INDEX_INVALID 0xFFFFFFFF
-
 typedef struct hash_entry
 {
 	void* key;
@@ -69,7 +67,7 @@ hash_map_t create_hash_map(hash_funcs* funcs, uint32_t hash_size)
 	memcpy(&p_hashmap->funcs, funcs, sizeof(hash_funcs));
 	p_hashmap->tbl_idx = 0;
 	p_hashmap->rehashing = 0;
-	p_hashmap->rehashidx = HASH_INDEX_INVALID;
+	p_hashmap->rehashidx = 0;
 	p_hashmap->load_factor = 0.8f;
 
 	return p_hashmap;
@@ -139,12 +137,39 @@ void* find_value(hash_map_t hash_map, void* key)
 
 void check_rehashing(hash_map_t hash_map)
 {
+	uint8_t old_tbl_idx = 0;
+	uint32_t old_rehash_idx = 0;
+	hash_entry *hash_entry = 0;
+
 	if(!hash_map->rehashing)
 	{
 		return;
 	}
 
+	old_tbl_idx = (0 == hash_map->tbl_idx) ? 1 : 0;
+	old_rehash_idx = hash_map->rehashidx;
 
+	hash_entry = hash_map->table[old_tbl_idx].bkt[old_rehash_idx];
+	if(0 == hash_entry)
+	{
+		++hash_map->rehashidx;
+		return;
+	}
+
+	hash_map->table[old_tbl_idx].bkt[old_rehash_idx] = hash_entry->next;
+
+	insert_value_in_bkt(hash_map, hash_entry->key, hash_entry->u.value);
+	hash_map->funcs.key_destruct(hash_entry->key);
+	hash_map->funcs.value_destruct(hash_entry->u.value);
+	free(hash_entry);
+
+	if(hash_map->table[old_tbl_idx].used) {
+		--hash_map->table[old_tbl_idx].used;
+		if(0 == hash_map->table[old_tbl_idx].used) {
+			hash_map->rehashing = 0;
+			free(hash_map->table[old_tbl_idx].bkt);
+		}
+	}
 }
 
 int32_t insert_value_in_bkt(hash_map_t hash_map, void* key, void* value)
@@ -225,13 +250,23 @@ void* find_value_in_bkt(hash_map_t hash_map, hash_entry * bkt, void* key)
 
 uint32_t hash_map_size(hash_map_t hash_map)
 {
+	uint32_t map_size = 0;
+
 	if( (0 == hash_map)
 			|| (hash_map->tbl_idx > 1))
 	{
 		return 0;
 	}
 
-	return hash_map->table[hash_map->tbl_idx].used;
+	if(hash_map->rehashing)
+	{
+		uint8_t old_tbl_idx = (0 == hash_map->tbl_idx) ? 1 : 0;
+		map_size += hash_map->table[old_tbl_idx].used;
+	}
+
+	map_size += hash_map->table[hash_map->tbl_idx].used;
+
+	return map_size;
 }
 
 void set_load_refactor(hash_map_t hash_map, float factor)
