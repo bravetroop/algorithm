@@ -32,6 +32,8 @@ uint32_t hash_map_size(hash_map_t hash_map);
 
 void set_load_refactor(hash_map_t hash_map, float factor);
 
+int32_t free_hash_map(hash_map_t hash_map);
+
 #ifdef __cplusplus
 }
 #endif

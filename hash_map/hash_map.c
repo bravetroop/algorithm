@@ -23,7 +23,7 @@ typedef struct hash_map
 {
 	hash_funcs funcs;
 	hash_table table[2];
-	uint8_t tbl_idx;
+	uint8_t cur_tbl_idx;
 	uint8_t rehashing;
 	uint16_t reserved;
 	uint32_t rehashidx;
@@ -33,6 +33,7 @@ typedef struct hash_map
 static void check_rehashing(hash_map_t hash_map);
 static void* find_value_in_bkt(hash_map_t hash_map, hash_entry * bkt_entry, void* key);
 
+static uint8_t get_idle_tbl_idx(hash_map_t);
 static int32_t check_incre_hashtable(hash_map_t hash_map);
 static int32_t insert_value_in_bkt(hash_map_t hash_map, void* key, void* value);
 
@@ -65,7 +66,7 @@ hash_map_t create_hash_map(hash_funcs* funcs, uint32_t hash_size)
 	memset(&p_hashmap->table[1], 0, sizeof(hash_table));
 
 	memcpy(&p_hashmap->funcs, funcs, sizeof(hash_funcs));
-	p_hashmap->tbl_idx = 0;
+	p_hashmap->cur_tbl_idx = 0;
 	p_hashmap->rehashing = 0;
 	p_hashmap->rehashidx = 0;
 	p_hashmap->load_factor = 0.8f;
@@ -112,12 +113,12 @@ void* find_value(hash_map_t hash_map, void* key)
 		return 0;
 	}
 
-	tbl_idx = hash_map->tbl_idx;
+	tbl_idx = hash_map->cur_tbl_idx;
 
 	//find in old hash map
 	if(hash_map->rehashing)
 	{
-		uint8_t old_tbl = (0 == tbl_idx) ? 1 : 0;
+		uint8_t old_tbl = get_idle_tbl_idx(hash_map);
 
 		bkt_idx = hash_map->funcs.hash_func(key) & (hash_map->table[old_tbl].size - 1);
 		if(bkt_idx >= hash_map->rehashidx)
@@ -146,7 +147,7 @@ void check_rehashing(hash_map_t hash_map)
 		return;
 	}
 
-	old_tbl_idx = (0 == hash_map->tbl_idx) ? 1 : 0;
+	old_tbl_idx = get_idle_tbl_idx(hash_map);
 	old_rehash_idx = hash_map->rehashidx;
 
 	hash_entry = hash_map->table[old_tbl_idx].bkt[old_rehash_idx];
@@ -185,7 +186,7 @@ int32_t insert_value_in_bkt(hash_map_t hash_map, void* key, void* value)
 	hash_entry * bkt_node = 0;
 	hash_entry * new_node = 0;
 
-	tbl_idx = hash_map->tbl_idx;
+	tbl_idx = hash_map->cur_tbl_idx;
 	bkt_idx = hash_map->funcs.hash_func(key) &(hash_map->table[tbl_idx].size -1);
 	bkt_node = hash_map->table[tbl_idx].bkt[bkt_idx];
 
@@ -208,13 +209,13 @@ int32_t insert_value_in_bkt(hash_map_t hash_map, void* key, void* value)
 int32_t check_incre_hashtable(hash_map_t hash_map)
 {
 	uint32_t hash_size = 0;
-	int tbl_idx = hash_map->tbl_idx;
+	int tbl_idx = hash_map->cur_tbl_idx;
 
 	if(!hash_map->rehashing
 				&& ((float)hash_map->table[tbl_idx].used/hash_map->table[tbl_idx].size > hash_map->load_factor))
 	{
 		//new table
-		tbl_idx = (0 == hash_map->tbl_idx) ? 1 : 0;
+		tbl_idx = get_idle_tbl_idx(hash_map);
 		if (hash_map->table[tbl_idx].bkt) {
 			return -1;
 		}
@@ -230,7 +231,7 @@ int32_t check_incre_hashtable(hash_map_t hash_map)
 		hash_map->table[tbl_idx].used = 0;
 
 		hash_map->rehashing = 1;
-		hash_map->tbl_idx = tbl_idx;
+		hash_map->cur_tbl_idx = tbl_idx;
 		hash_map->rehashidx = 0;
 	}
 
@@ -259,24 +260,43 @@ uint32_t hash_map_size(hash_map_t hash_map)
 	uint32_t map_size = 0;
 
 	if( (0 == hash_map)
-			|| (hash_map->tbl_idx > 1))
+			|| (hash_map->cur_tbl_idx > 1))
 	{
 		return 0;
 	}
 
 	if(hash_map->rehashing)
 	{
-		uint8_t old_tbl_idx = (0 == hash_map->tbl_idx) ? 1 : 0;
+		uint8_t old_tbl_idx = get_idle_tbl_idx(hash_map);
 		map_size += hash_map->table[old_tbl_idx].used;
 	}
 
-	map_size += hash_map->table[hash_map->tbl_idx].used;
+	map_size += hash_map->table[hash_map->cur_tbl_idx].used;
 
 	return map_size;
+}
+
+int32_t free_hash_map(hash_map_t hash_map)
+{
+	if(0 == hash_map)
+	{
+		return -1;
+	}
+	return 0;
 }
 
 void set_load_refactor(hash_map_t hash_map, float factor)
 {
 	if(factor && hash_map)
 		hash_map->load_factor = factor;
+}
+
+uint8_t get_idle_tbl_idx(hash_map_t hash_map)
+{
+	if(0 == hash_map)
+	{
+		return 0;
+	}
+
+	return (0 == hash_map->cur_tbl_idx) ? 1 : 0;
 }

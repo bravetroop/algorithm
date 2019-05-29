@@ -2,6 +2,8 @@
 #include <assert.h>
 #include "hash_map.h"
 
+static uint32_t hash_value = 0;
+
 uint32_t hash_func(void* key);
 void* key_dump(void* key);
 void* value_dump(void* value);
@@ -22,15 +24,17 @@ int main(int argc, char* argv[])
 	char* pkey[] = {"H", "He", "Hel", "Hell", "Hello", "Haha"};
 	char* pvalue[] = {"W", "Wo", "Wor", "Worl", "World", "bingo"};
 
-	hash_map = create_hash_map(&hash_funcs, 6);
+	hash_map = create_hash_map(&hash_funcs, 2);
 	assert(0 != result);
 
-	set_load_refactor(hash_map, 0.5f);
+	set_load_refactor(hash_map, 1.0f);
 
 	for(index = 0; index < sizeof(pkey)/sizeof(pkey[0]); ++index)
 	{
 		result = insert_hash_map(hash_map, pkey[index], pvalue[index]);
 		assert(0 == result);
+
+		++hash_value;
 
 		hash_size = hash_map_size(hash_map);
 		printf("hash_size : %u\n", hash_size);
@@ -49,11 +53,14 @@ int main(int argc, char* argv[])
 	assert(0 == value);
 	printf("find value = %s\n", value);
 
+	free_hash_map(hash_map);
+
 	return 0;
 }
 
 uint32_t hash_func(void* key)
 {
+	/*
 	int index = 0;
 	int str_len = strlen((const char*)key);
 	uint32_t hash_value = 0;
@@ -62,6 +69,7 @@ uint32_t hash_func(void* key)
 	{
 		hash_value += ((char*)key)[index];
 	}
+	*/
 
 	return hash_value;
 }
