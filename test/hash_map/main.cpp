@@ -2,8 +2,6 @@
 #include <assert.h>
 #include "hash_map.h"
 
-static uint32_t hash_value = 0;
-
 uint32_t hash_func(void* key);
 void* key_dump(void* key);
 void* value_dump(void* value);
@@ -34,8 +32,6 @@ int main(int argc, char* argv[])
 		result = insert_hash_map(hash_map, pkey[index], pvalue[index]);
 		assert(0 == result);
 
-		++hash_value;
-
 		hash_size = hash_map_size(hash_map);
 		printf("hash_size : %u\n", hash_size);
 	}
@@ -60,7 +56,6 @@ int main(int argc, char* argv[])
 
 uint32_t hash_func(void* key)
 {
-	/*
 	int index = 0;
 	int str_len = strlen((const char*)key);
 	uint32_t hash_value = 0;
@@ -69,7 +64,6 @@ uint32_t hash_func(void* key)
 	{
 		hash_value += ((char*)key)[index];
 	}
-	*/
 
 	return hash_value;
 }
