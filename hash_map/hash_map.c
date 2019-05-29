@@ -214,13 +214,13 @@ int32_t check_incre_hashtable(hash_map_t hash_map)
 	if(!hash_map->rehashing
 				&& ((float)hash_map->table[tbl_idx].used/hash_map->table[tbl_idx].size > hash_map->load_factor))
 	{
+		hash_size = hash_map->table[tbl_idx].size * 2;
+
 		//new table
 		tbl_idx = get_idle_tbl_idx(hash_map);
 		if (hash_map->table[tbl_idx].bkt) {
 			return -1;
 		}
-
-		hash_size = hash_map->table[tbl_idx].size * 2;
 
 		hash_map->table[tbl_idx].bkt = (hash_entry **) malloc(sizeof(hash_entry *) * hash_size);
 		if (0 == hash_map->table[tbl_idx].bkt) {
