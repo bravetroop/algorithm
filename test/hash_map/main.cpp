@@ -19,8 +19,8 @@ int main(int argc, char* argv[])
 	hash_map_t hash_map = 0;
 	hash_funcs hash_funcs = { hash_func, key_dump, value_dump, key_cmp, key_destruct, value_destruct };
 
-	char* pkey[] = {"H", "He", "Hel", "Hell", "Hello", "Haha"};
-	char* pvalue[] = {"W", "Wo", "Wor", "Worl", "World", "bingo"};
+	char* pkey[] = {"1", "2", "3", "4", "H", "He", "Hel", "Hell", "Hello", "Haha", "a", "b", "c", "d"};
+	char* pvalue[] = {"1", "2", "3", "4", "W", "Wo", "Wor", "Worl", "World", "bingo", "aa", "bb", "cc", "dd"};
 
 	hash_map = create_hash_map(&hash_funcs, 2);
 	assert(0 != result);

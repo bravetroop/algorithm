@@ -93,12 +93,6 @@ int32_t insert_hash_map(hash_map_t hash_map, void* key, void* value)
 		return -3;
 	}
 
-	//rehash
-	if(0 != check_incre_hashtable(hash_map))
-	{
-		return -4;
-	}
-
 	return 0;
 }
 
@@ -144,6 +138,7 @@ void check_rehashing(hash_map_t hash_map)
 
 	if(!hash_map->rehashing)
 	{
+		check_incre_hashtable(hash_map);
 		return;
 	}
 
@@ -211,8 +206,7 @@ int32_t check_incre_hashtable(hash_map_t hash_map)
 	uint32_t hash_size = 0;
 	int tbl_idx = hash_map->cur_tbl_idx;
 
-	if(!hash_map->rehashing
-				&& ((float)hash_map->table[tbl_idx].used/hash_map->table[tbl_idx].size > hash_map->load_factor))
+	if( (float)hash_map->table[tbl_idx].used/hash_map->table[tbl_idx].size > hash_map->load_factor)
 	{
 		hash_size = hash_map->table[tbl_idx].size * 2;
 
