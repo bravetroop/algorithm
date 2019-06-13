@@ -272,10 +272,52 @@ uint32_t hash_map_size(hash_map_t hash_map)
 
 int32_t free_hash_map(hash_map_t hash_map)
 {
+	uint32_t index = 0;
+	uint8_t tbl_idx = 0;
+	uint32_t bkt_size = 0;
+
 	if(0 == hash_map)
 	{
 		return -1;
 	}
+
+	if(hash_map->rehashing)
+	{
+		tbl_idx = get_idle_tbl_idx(hash_map);
+		bkt_size = hash_map->table[tbl_idx].size;
+		for(index = 0; index < bkt_size; ++index)
+		{
+			hash_entry* p = hash_map->table[tbl_idx].bkt[index];
+			hash_entry* q = p;
+			while(p)
+			{
+				q = p->next;
+				free(p->key);
+				free(p->u.value);
+				p = q;
+			}
+		}
+		free(hash_map->table[tbl_idx].bkt);
+	}
+
+	tbl_idx = hash_map->cur_tbl_idx;
+	bkt_size = hash_map->table[tbl_idx].size;
+	for(index = 0; index < bkt_size; ++index)
+	{
+		hash_entry* p = hash_map->table[tbl_idx].bkt[index];
+		hash_entry* q = p;
+		while(p)
+		{
+			q = p->next;
+			free(p->key);
+			free(p->u.value);
+			p = q;
+		}
+	}
+	free(hash_map->table[tbl_idx].bkt);
+
+	free(hash_map);
+
 	return 0;
 }
 
