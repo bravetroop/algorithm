@@ -4,14 +4,12 @@ hash_map_t create_hash_map(hash_funcs* funcs, uint32_t hash_size)
 {
 	hash_map_t p_hashmap = 0;
 
-	if ((0 == funcs) || (0 == hash_size))
-	{
+	if ((0 == funcs) || (0 == hash_size)) {
 		return 0;
 	}
 
 	p_hashmap = (hash_map_t) malloc(sizeof(hash_map));
-	if (0 == p_hashmap)
-	{
+	if (0 == p_hashmap) {
 		return 0;
 	}
 
@@ -20,8 +18,7 @@ hash_map_t create_hash_map(hash_funcs* funcs, uint32_t hash_size)
 	p_hashmap->table[0].size = hash_size;
 	p_hashmap->table[0].used = 0;
 	p_hashmap->table[0].bkt = (hash_entry **) malloc(sizeof(hash_entry *) * hash_size);
-	if (0 == p_hashmap->table[0].bkt)
-	{
+	if (0 == p_hashmap->table[0].bkt) {
 		free(p_hashmap);
 		return 0;
 	}
@@ -41,20 +38,24 @@ int32_t insert_hash_map(hash_map_t hash_map, void* key, void* value)
 {
 	hash_entry* p_hash_entry = 0;
 
-	if( (0 == hash_map) || (0 == key) || (0 == value) )
-	{
+	if( (0 == hash_map) || (0 == key) || (0 == value) ) {
 		return -1;
 	}
 
 	p_hash_entry = (hash_entry*)malloc(sizeof(hash_entry));
-	if(0 == p_hash_entry)
-	{
+	if(0 == p_hash_entry) {
 		return -2;
 	}
 	p_hash_entry->key = hash_map->funcs.key_dump(key);
 	p_hash_entry->u.value = hash_map->funcs.value_dump(value);
+	p_hash_entry->next = 0;
 
-	insert_node_in_bkt(hash_map, p_hash_entry);
+	if(0 != insert_node_in_bkt(hash_map, p_hash_entry)) {
+		hash_map->funcs.key_destruct(p_hash_entry->key);
+		hash_map->funcs.value_destruct(p_hash_entry->u.value);
+		free(p_hash_entry);
+		return -3;
+	}
 
 	return 0;
 }
@@ -63,20 +64,76 @@ int32_t insert_node_in_bkt(hash_map_t hash_map, hash_entry* p_hash_entry)
 {
 	uint32_t bkt_idx = 0;
 	uint8_t curr_tbl_idx = 0;
+	hash_entry* p = 0, *p_tmp = 0;
 
-	if((0 == hash_map) || (0 == p_hash_entry))
-	{
+	if((0 == hash_map) || (0 == p_hash_entry)) {
 		return -1;
 	}
 
 	curr_tbl_idx = get_curr_tbl_idx(hash_map);
 	bkt_idx = hash_map->funcs.hash_func(p_hash_entry->key) &(hash_map->table[curr_tbl_idx].size -1);
 
-	p_hash_entry->next = hash_map->table[curr_tbl_idx].bkt[bkt_idx];
-	hash_map->table[curr_tbl_idx].bkt[bkt_idx] = p_hash_entry;
+	p = p_tmp = hash_map->table[curr_tbl_idx].bkt[bkt_idx];
+	if(0 == p) {
+		hash_map->table[curr_tbl_idx].bkt[bkt_idx] = p_hash_entry;
+	} else {
+		while(p_tmp) {
+			if(0 == hash_map->funcs.key_cmp(p_hash_entry->key, p_tmp->key)) {
+				//already exist
+				return -2;
+			}
+			p = p_tmp;
+			p_tmp = p_tmp->next;
+		}
+
+		p->next = p_hash_entry; //insert into last
+	}
+
 	++hash_map->table[curr_tbl_idx].used;
 
 	return 0;
+}
+
+void* find_value(hash_map_t hash_map, void* key)
+{
+	uint8_t tbl_idx = 0;
+	uint32_t bkt_idx = 0;
+	void* value = 0;
+
+	if( !hash_map || !key ) {
+		return 0;
+	}
+
+	if(hash_map->rehashing) {
+		tbl_idx = get_idle_tbl_idx(hash_map);
+		bkt_idx = hash_map->funcs.hash_func(key) & (hash_map->table[tbl_idx].size - 1);
+		if(bkt_idx >= hash_map->rehashidx) {
+			value = find_value_in_bkt(hash_map, hash_map->table[tbl_idx].bkt[bkt_idx], key);
+			if(value)
+				return value;
+		}
+	}
+
+	tbl_idx = get_curr_tbl_idx(hash_map);
+	bkt_idx = hash_map->funcs.hash_func(key) &(hash_map->table[tbl_idx].size -1);
+	value = find_value_in_bkt(hash_map, hash_map->table[tbl_idx].bkt[bkt_idx], key);
+
+	return value;
+}
+
+void* find_value_in_bkt(hash_map_t hash_map, hash_entry * bkt, void* key)
+{
+	void* pval = 0;
+	hash_entry* pnode = 0;
+
+	for (pnode = bkt; 0 != pnode; pnode = pnode->next) {
+		if (0 == hash_map->funcs.key_cmp(pnode->key, key)) {
+			pval = pnode->u.value;
+			break;
+		}
+	}
+
+	return pval;
 }
 
 uint32_t hash_map_size(hash_map_t hash_map)
@@ -85,13 +142,11 @@ uint32_t hash_map_size(hash_map_t hash_map)
 	uint8_t curr_tbl_idx = 0;
 	uint32_t map_size = 0;
 
-	if(0 == hash_map)
-	{
+	if(0 == hash_map) {
 		return 0;
 	}
 
-	if(hash_map->rehashing)
-	{
+	if(hash_map->rehashing) {
 		idle_tbl_idx = get_idle_tbl_idx(hash_map);
 		map_size += hash_map->table[idle_tbl_idx].used;
 	}
@@ -113,8 +168,7 @@ int32_t free_hash_map(hash_map_t hash_map)
 	uint8_t cur_tbl_idx = 0;
 	uint8_t idl_tbl_idx = 0;
 
-	if(0 == hash_map)
-	{
+	if(0 == hash_map) {
 		return -1;
 	}
 
@@ -133,20 +187,16 @@ void free_hash_table(hash_map_t hash_map, uint8_t tbl_idx)
 	uint32_t bkt_idx = 0;
 	uint32_t bkt_size = 0;
 
-	if( (0 == hash_map) || (tbl_idx > 1))
-	{
+	if( (0 == hash_map) || (tbl_idx > 1)) {
 		return;
 	}
 
-	if(hash_map->table[tbl_idx].bkt)
-	{
+	if(hash_map->table[tbl_idx].bkt) {
 		bkt_size = hash_map->table[tbl_idx].size;
-		for(bkt_idx = 0; bkt_idx < bkt_size; ++bkt_idx)
-		{
+		for(bkt_idx = 0; bkt_idx < bkt_size; ++bkt_idx) {
 			hash_entry* p = hash_map->table[tbl_idx].bkt[bkt_idx];
 			hash_entry* q = p;
-			while(p)
-			{
+			while(p) {
 				q = p->next;
 				hash_map->funcs.key_destruct(p->key);
 				hash_map->funcs.value_destruct(p->u.value);
@@ -162,8 +212,7 @@ void free_hash_table(hash_map_t hash_map, uint8_t tbl_idx)
 
 uint8_t get_curr_tbl_idx(hash_map_t hash_map)
 {
-	if(0 == hash_map)
-	{
+	if(0 == hash_map) {
 		return 0;
 	}
 
@@ -172,8 +221,7 @@ uint8_t get_curr_tbl_idx(hash_map_t hash_map)
 
 uint8_t get_idle_tbl_idx(hash_map_t hash_map)
 {
-	if(0 == hash_map)
-	{
+	if(0 == hash_map) {
 		return 0;
 	}
 
