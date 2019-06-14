@@ -1,5 +1,5 @@
-#ifndef _HASH_MAP_H_
-#define _HASH_MAP_H_
+#ifndef __HASH_MAP__
+#define __HASH_MAP__
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -25,8 +25,6 @@ typedef struct
 hash_map_t create_hash_map(hash_funcs* funcs, uint32_t hash_size);
 
 int32_t insert_hash_map(hash_map_t hash_map, void* key, void* value);
-
-void* find_value(hash_map_t hash_map, void* key);
 
 uint32_t hash_map_size(hash_map_t hash_map);
 
