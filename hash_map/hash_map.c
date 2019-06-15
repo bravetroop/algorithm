@@ -57,6 +57,8 @@ int32_t insert_hash_map(hash_map_t hash_map, void* key, void* value)
 		return -3;
 	}
 
+	check_load_factor(hash_map);
+
 	return 0;
 }
 
@@ -92,6 +94,73 @@ int32_t insert_node_in_bkt(hash_map_t hash_map, hash_entry* p_hash_entry)
 	++hash_map->table[curr_tbl_idx].used;
 
 	return 0;
+}
+
+void check_load_factor(hash_map_t hash_map)
+{
+	uint8_t curr_tbl_idx = 0;
+	uint8_t idle_tbl_idx = 0;
+
+	if(!hash_map->rehashing)
+	{
+		uint32_t rehash_size = 0;
+		float load_factor = 0.0f;
+
+		curr_tbl_idx = get_curr_tbl_idx(hash_map);
+		load_factor = (float)hash_map->table[curr_tbl_idx].used/hash_map->table[curr_tbl_idx].size;
+		if(load_factor < hash_map->load_factor)
+		{
+			return;
+		}
+
+		rehash_size = hash_map->table[curr_tbl_idx].size * 2;
+		idle_tbl_idx = get_idle_tbl_idx(hash_map);
+		//空闲Hash表的bkt不为空(error)
+		if (hash_map->table[idle_tbl_idx].bkt) {
+			return;
+		}
+
+		//为当前idle的表分配空间
+		hash_map->table[idle_tbl_idx].bkt = (hash_entry **) malloc(sizeof(hash_entry *) * rehash_size);
+		if (0 == hash_map->table[idle_tbl_idx].bkt) {
+			return;
+		}
+		memset(hash_map->table[idle_tbl_idx].bkt, 0, sizeof(hash_entry *) * rehash_size);
+		hash_map->table[idle_tbl_idx].size = rehash_size;
+		hash_map->table[idle_tbl_idx].used = 0;
+
+		hash_map->rehashing = 1;
+		hash_map->cur_tbl_idx = idle_tbl_idx; //当前操作Hash表切换为之前Idle的Hash表
+		hash_map->rehashidx = 0;
+	} else {
+		uint32_t rehash_idx = 0;
+		hash_entry *hash_entry = 0;
+
+		idle_tbl_idx = get_idle_tbl_idx(hash_map); //rehash之前的表
+
+		rehash_idx = hash_map->rehashidx;
+		hash_entry = hash_map->table[idle_tbl_idx].bkt[rehash_idx];
+
+		if(0 == hash_entry) {
+			//如果当前桶处理完毕
+			++hash_map->rehashidx;
+			if(hash_map->rehashidx >= hash_map->table[idle_tbl_idx].size) {
+				hash_map->rehashidx = 0;
+			}
+		} else {
+			hash_map->table[idle_tbl_idx].bkt[rehash_idx] = hash_entry->next;
+			insert_node_in_bkt(hash_map, hash_entry);
+			if(hash_map->table[idle_tbl_idx].used) {
+				--hash_map->table[idle_tbl_idx].used;
+			}
+		}
+
+		if (0 == hash_map->table[idle_tbl_idx].used) {
+			hash_map->rehashing = 0;
+			free(hash_map->table[idle_tbl_idx].bkt);
+			hash_map->table[idle_tbl_idx].bkt = 0;
+		}
+	}
 }
 
 void* find_value(hash_map_t hash_map, void* key)
@@ -157,12 +226,6 @@ uint32_t hash_map_size(hash_map_t hash_map)
 	return map_size;
 }
 
-void set_load_refactor(hash_map_t hash_map, float factor)
-{
-	if(factor && hash_map)
-		hash_map->load_factor = factor;
-}
-
 int32_t free_hash_map(hash_map_t hash_map)
 {
 	uint8_t cur_tbl_idx = 0;
@@ -208,6 +271,12 @@ void free_hash_table(hash_map_t hash_map, uint8_t tbl_idx)
 		free(hash_map->table[tbl_idx].bkt);
 		hash_map->table[tbl_idx].bkt = 0;
 	}
+}
+
+void set_load_refactor(hash_map_t hash_map, float factor)
+{
+	if(factor && hash_map)
+		hash_map->load_factor = factor;
 }
 
 uint8_t get_curr_tbl_idx(hash_map_t hash_map)
