@@ -19,34 +19,31 @@ int main(int argc, char* argv[])
 	hash_map_t hash_map = 0;
 	hash_funcs hash_funcs = { hash_func, key_dump, value_dump, key_cmp, key_destruct, value_destruct };
 
-	char* pkey[] = {"1", "2", "3", "4", "H", "He", "Hel", "Hell", "Hello", "Haha", "a", "b", "c", "d"};
+	char* pkey[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "Haha", "a", "b", "c", "d"};
 	char* pvalue[] = {"1", "2", "3", "4", "W", "Wo", "Wor", "Worl", "World", "bingo", "aa", "bb", "cc", "dd"};
 
 	hash_map = create_hash_map(&hash_funcs, 2);
-	assert(0 != result);
+	assert(0 != hash_map);
 
-	set_load_refactor(hash_map, 1.0f);
+	set_load_refactor(hash_map, 0.6f);
 
-	for(index = 0; index < sizeof(pkey)/sizeof(pkey[0]); ++index)
-	{
+	for(index = 0; index < sizeof(pkey)/sizeof(pkey[0]); ++index) {
 		result = insert_hash_map(hash_map, pkey[index], pvalue[index]);
 		assert(0 == result);
-
-		hash_size = hash_map_size(hash_map);
-		printf("hash_size : %u\n", hash_size);
 	}
+	assert(hash_map_size(hash_map) == sizeof(pkey)/sizeof(pkey[0]));
 
 	result = insert_hash_map(hash_map, pkey[0], pvalue[0]);
-	assert(-2 == result);
+	assert(0 != result);
 
 	char* pkey1 = "Hell";
 	value = find_value(hash_map, pkey1);
-	assert(0 != value);
+	assert(0 == value);
 	printf("find value = %s\n", value);
 
 	pkey1 = "Haha";
 	value = find_value(hash_map, pkey1);
-	assert(0 == value);
+	assert(0 != value);
 	printf("find value = %s\n", value);
 
 	free_hash_map(hash_map);
@@ -116,6 +113,7 @@ int32_t key_cmp(void* key1, void* key2)
 
 void key_destruct(void* key)
 {
+	printf("%s\n", key);
 	free(key);
 }
 

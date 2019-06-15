@@ -1,3 +1,4 @@
+#include <assert.h>
 #include "hash_map_priv.h"
 
 hash_map_t create_hash_map(hash_funcs* funcs, uint32_t hash_size)
@@ -42,9 +43,20 @@ int32_t insert_hash_map(hash_map_t hash_map, void* key, void* value)
 		return -1;
 	}
 
+	//check if exist in old hash table
+	if(hash_map->rehashing) {
+		uint8_t idle_tbl_idx = get_idle_tbl_idx(hash_map);
+		uint32_t bkt_idx = hash_map->funcs.hash_func(key) & (hash_map->table[idle_tbl_idx].size - 1);
+		hash_entry* p_idle_bkt = hash_map->table[idle_tbl_idx].bkt[bkt_idx];
+
+		if(find_value_in_bkt(hash_map, p_idle_bkt, key)) {
+			return -2;
+		}
+	}
+
 	p_hash_entry = (hash_entry*)malloc(sizeof(hash_entry));
 	if(0 == p_hash_entry) {
-		return -2;
+		return -3;
 	}
 	p_hash_entry->key = hash_map->funcs.key_dump(key);
 	p_hash_entry->u.value = hash_map->funcs.value_dump(value);
@@ -54,7 +66,7 @@ int32_t insert_hash_map(hash_map_t hash_map, void* key, void* value)
 		hash_map->funcs.key_destruct(p_hash_entry->key);
 		hash_map->funcs.value_destruct(p_hash_entry->u.value);
 		free(p_hash_entry);
-		return -3;
+		return -4;
 	}
 
 	check_load_factor(hash_map);
@@ -101,15 +113,13 @@ void check_load_factor(hash_map_t hash_map)
 	uint8_t curr_tbl_idx = 0;
 	uint8_t idle_tbl_idx = 0;
 
-	if(!hash_map->rehashing)
-	{
+	if(!hash_map->rehashing) {
 		uint32_t rehash_size = 0;
 		float load_factor = 0.0f;
 
 		curr_tbl_idx = get_curr_tbl_idx(hash_map);
 		load_factor = (float)hash_map->table[curr_tbl_idx].used/hash_map->table[curr_tbl_idx].size;
-		if(load_factor < hash_map->load_factor)
-		{
+		if(load_factor < hash_map->load_factor) {
 			return;
 		}
 
@@ -117,6 +127,7 @@ void check_load_factor(hash_map_t hash_map)
 		idle_tbl_idx = get_idle_tbl_idx(hash_map);
 		//空闲Hash表的bkt不为空(error)
 		if (hash_map->table[idle_tbl_idx].bkt) {
+			assert(false);
 			return;
 		}
 
@@ -149,7 +160,11 @@ void check_load_factor(hash_map_t hash_map)
 			}
 		} else {
 			hash_map->table[idle_tbl_idx].bkt[rehash_idx] = hash_entry->next;
-			insert_node_in_bkt(hash_map, hash_entry);
+
+			hash_entry->next = 0;
+			if(0 != insert_node_in_bkt(hash_map, hash_entry)) {
+				assert(false);
+			}
 			if(hash_map->table[idle_tbl_idx].used) {
 				--hash_map->table[idle_tbl_idx].used;
 			}
