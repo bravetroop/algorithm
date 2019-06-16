@@ -145,24 +145,24 @@ void check_load_factor(hash_map_t hash_map)
 		hash_map->rehashidx = 0;
 	} else {
 		uint32_t rehash_idx = 0;
-		hash_entry *hash_entry = 0;
+		hash_entry *bkt_entry = 0;
 
 		idle_tbl_idx = get_idle_tbl_idx(hash_map); //rehash之前的表
 
 		rehash_idx = hash_map->rehashidx;
-		hash_entry = hash_map->table[idle_tbl_idx].bkt[rehash_idx];
+		bkt_entry = hash_map->table[idle_tbl_idx].bkt[rehash_idx];
 
-		if(0 == hash_entry) {
+		if(0 == bkt_entry) {
 			//如果当前桶处理完毕
 			++hash_map->rehashidx;
 			if(hash_map->rehashidx >= hash_map->table[idle_tbl_idx].size) {
 				hash_map->rehashidx = 0;
 			}
 		} else {
-			hash_map->table[idle_tbl_idx].bkt[rehash_idx] = hash_entry->next;
+			hash_map->table[idle_tbl_idx].bkt[rehash_idx] = bkt_entry->next;
 
-			hash_entry->next = 0;
-			if(0 != insert_node_in_bkt(hash_map, hash_entry)) {
+			bkt_entry->next = 0;
+			if(0 != insert_node_in_bkt(hash_map, bkt_entry)) {
 				assert(false);
 			}
 			if(hash_map->table[idle_tbl_idx].used) {
@@ -218,6 +218,56 @@ void* find_value_in_bkt(hash_map_t hash_map, hash_entry * bkt, void* key)
 	}
 
 	return pval;
+}
+
+int32_t delete_value(hash_map_t hash_map, void* key)
+{
+	uint8_t tbl_idx = 0;
+	uint32_t bkt_idx = 0;
+	hash_entry* bkt_entry = 0;
+
+	if( !hash_map || !key ) {
+		return -1;
+	}
+
+	if(hash_map->rehashing) {
+		tbl_idx = get_idle_tbl_idx(hash_map);
+		bkt_idx = hash_map->funcs.hash_func(key) &(hash_map->table[tbl_idx].size -1);
+		bkt_entry = hash_map->table[tbl_idx].bkt[bkt_idx];
+		if(0 == delete_value_in_bkt(hash_map, tbl_idx, bkt_entry, key)) {
+			return 0;
+		}
+	}
+
+	tbl_idx = get_curr_tbl_idx(hash_map);
+	bkt_idx = hash_map->funcs.hash_func(key) &(hash_map->table[tbl_idx].size -1);
+	bkt_entry = hash_map->table[tbl_idx].bkt[bkt_idx];
+	if(0 == delete_value_in_bkt(hash_map, tbl_idx, bkt_entry, key)) {
+		return 0;
+	}
+
+	return -2;
+}
+
+int32_t delete_value_in_bkt(hash_map_t hash_map, uint8_t tbl_idx, hash_entry * bkt, void* key)
+{
+	hash_entry* pnode = bkt, *ptmp = bkt;
+
+	for (ptmp = bkt; 0 != ptmp; ptmp = ptmp->next) {
+		if (0 == hash_map->funcs.key_cmp(ptmp->key, key)) {
+			pnode->next = ptmp->next;
+			hash_map->funcs.key_destruct(ptmp->key);
+			hash_map->funcs.value_destruct(ptmp->u.value);
+			free(ptmp);
+			if(hash_map->table[tbl_idx].used) {
+				--hash_map->table[tbl_idx].used;
+			}
+			return 0;
+		}
+		pnode = ptmp;
+	}
+
+	return -1;
 }
 
 uint32_t hash_map_size(hash_map_t hash_map)

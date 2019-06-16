@@ -46,6 +46,14 @@ int main(int argc, char* argv[])
 	assert(0 != value);
 	printf("find value = %s\n", value);
 
+	pkey1 = "world";
+	result = delete_value(hash_map, pkey1);
+	assert(0 != result);
+
+	pkey1 = "Haha";
+	result = delete_value(hash_map, pkey1);
+	assert(0 == result);
+
 	free_hash_map(hash_map);
 
 	return 0;
@@ -113,7 +121,6 @@ int32_t key_cmp(void* key1, void* key2)
 
 void key_destruct(void* key)
 {
-	printf("%s\n", key);
 	free(key);
 }
 

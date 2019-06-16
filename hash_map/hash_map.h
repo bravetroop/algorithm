@@ -28,6 +28,8 @@ int32_t insert_hash_map(hash_map_t hash_map, void* key, void* value);
 
 void* find_value(hash_map_t hash_map, void* key);
 
+int32_t delete_value(hash_map_t hash_map, void* key);
+
 uint32_t hash_map_size(hash_map_t hash_map);
 
 int32_t free_hash_map(hash_map_t hash_map);
