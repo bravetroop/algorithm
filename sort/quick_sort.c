@@ -8,7 +8,7 @@ void quick_sort(int *parr, int len)
 
     //只有一个数, 不用再排序
     if(i >= j) {
-	return;
+        return;
     }
 
     flag = parr[0];
@@ -19,7 +19,7 @@ void quick_sort(int *parr, int len)
 	}
 	
 	//向左找到第一个比基准值大的数
-	while( (parr[i] <= flag) && (i < j) ) { 
+	while( (parr[i] <= flag) && (i < j) ) {
 	    ++i;
 	}
 
@@ -43,7 +43,7 @@ void print_arr(int *parr, int arr_len)
 {
     int index = 0;
     for(index = 0; index < arr_len; ++index) {
-	printf("%d ", parr[index]); 
+	    printf("%d ", parr[index]); 
     }   
     printf("\n");
 }   
