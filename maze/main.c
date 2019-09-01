@@ -7,25 +7,22 @@
 char maze[LINE_NUM][ROW_NUM];
 
 int read_maze();
-int do_maze(stack* s);
+int do_maze();
 void print_maze();
 
 int main()
 {
-    stack* s = create_stack(200);
-    
     read_maze();
     print_maze();
 
-    do_maze(s);
-
-    free_stack(s);
+    do_maze();
     return 0;
 }
 
-int do_maze(stack* s)
+int do_maze()
 {
     coordinate cord = {0}, end = {0}, *cur = 0;
+    stack* s = create_stack(200);
     
     printf("input start coordinate:");
     scanf("%d %d", &cord.x, &cord.y);
@@ -80,6 +77,8 @@ int do_maze(stack* s)
     }
 
     print_maze();
+
+    free_stack(s);
     return 0;
 }
 
