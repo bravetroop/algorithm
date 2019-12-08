@@ -17,27 +17,29 @@
 
 class Solution {
 public:
-    void midOrder(TreeNode* root, int num) {
-        if(root == 0) {
-            return;
-        }
+    void preOrder(TreeNode* root, int num) {
         num = num * 10 + root->val;
 
         if ( (root->left == 0)
              && (root->right == 0) ) {
             total += num;
         } else {
-            midOrder(root->left, num);
-            midOrder(root->right, num);
+        	if(root->left) {
+        		preOrder(root->left, num);
+        	}
+
+        	if(root->right) {
+        		preOrder(root->right, num);
+        	}
         }
     }
 
     int sumNumbers(TreeNode* root) {
-        midOrder(root, 0);
+        if(root) {
+        	preOrder(root, 0);
+        }
         return total;
     }
 private:
     int total;
 };
-
-
