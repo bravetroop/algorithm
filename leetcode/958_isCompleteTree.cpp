@@ -10,16 +10,19 @@
 
 class Solution {
 public:
-    bool isCompleteTree(TreeNode* root) {
+    bool isCompleteTree(TreeNode *root)
+    {
         bool hasNullChild = false;
-        queue<TreeNode*> que;
+        queue<TreeNode *> que;
         que.push(root);
         while (!que.empty()) {
-            TreeNode* node = que.front();
+            TreeNode *node = que.front();
             que.pop();
 
             if (node) {
-                if (hasNullChild) return false;
+                if (hasNullChild) {
+                    return false;
+                }
                 que.push(node->left);
                 que.push(node->right);
             } else {
