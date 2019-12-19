@@ -34,7 +34,7 @@ void quick_sort(int *parr, int len)
     parr[i] = flag;
 
     //排序左边，从0开始，长度是i
-    quick_sort(parr, i-1);
+    quick_sort(parr, i);
     //排序右边，从i+1开始，第i位作为基准数，不需再排序
     quick_sort(parr+i+1, len - i - 1);
 }
