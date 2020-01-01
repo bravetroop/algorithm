@@ -7,7 +7,6 @@ settings.json:
     "workbench.colorCustomizations": {
     },
 
-    "cmake.cmakePath": "/usr/bin/cmake",
     "workbench.editor.enablePreview": false,
     "window.title": "${dirty}${activeEditorMedium}${separator}${rootName}",
 }
