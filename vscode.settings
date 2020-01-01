@@ -1,0 +1,14 @@
+settings.json:
+{
+    "C_Cpp.updateChannel": "Insiders",
+    "editor.fontSize": 20,
+    "workbench.colorTheme": "Monokai Dimmed",
+
+    "workbench.colorCustomizations": {
+    },
+
+    "cmake.cmakePath": "/usr/bin/cmake",
+    "workbench.editor.enablePreview": false,
+    "window.title": "${dirty}${activeEditorMedium}${separator}${rootName}",
+}
+
