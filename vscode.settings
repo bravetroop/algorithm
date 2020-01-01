@@ -1,4 +1,4 @@
-settings.json:
+1. settings.json:
 {
     "C_Cpp.updateChannel": "Insiders",
     "editor.fontSize": 20,
@@ -10,4 +10,6 @@ settings.json:
     "workbench.editor.enablePreview": false,
     "window.title": "${dirty}${activeEditorMedium}${separator}${rootName}",
 }
+
+2. 查找workbench.desktop.main.css并修改.part>.content的属性值
 
