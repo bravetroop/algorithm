@@ -11,5 +11,6 @@
     "window.title": "${dirty}${activeEditorMedium}${separator}${rootName}",
 }
 
-2. 查找workbench.desktop.main.css并修改.part>.content的属性值
+2. 修改左侧侧边栏的字体大小：
+   查找workbench.desktop.main.css并修改.part>.content的属性值
 
