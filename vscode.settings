@@ -23,4 +23,13 @@
 
 2. 修改左侧侧边栏的字体大小：
    查找workbench.desktop.main.css并修改.part>.content的属性值
-
+3. 快捷键
+   Ctrl + Shift + P，F1 | 显示命令面板 Show Command Palette
+   Ctrl + P             | 快速打开 Quick Open
+   Ctrl + T             | 显示所有符号 Show all Symbols
+   Ctrl + G             | 转到行... Go to Line...
+   Ctrl + P             | 转到文件... Go to File...
+   Ctrl + D             | 删除
+   Ctrl + S             | 保存
+   Ctrl + N             | 新生成文件
+   Ctrl + W             | 关闭文件
