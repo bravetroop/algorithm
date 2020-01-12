@@ -22,7 +22,7 @@
 }
 
 2. 修改左侧侧边栏的字体大小：
-   查找workbench.desktop.main.css并修改.monaco-workbench>.part>.content的属性值
+   查找workbench.desktop.main.css并修改.monaco-workbench >.part>.content的属性值
 3. 快捷键
    Ctrl + Shift + P，F1 | 显示命令面板 Show Command Palette
    Ctrl + P             | 快速打开 Quick Open
