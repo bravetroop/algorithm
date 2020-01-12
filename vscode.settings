@@ -33,3 +33,5 @@
    Ctrl + S             | 保存
    Ctrl + N             | 新生成文件
    Ctrl + W             | 关闭文件
+   Ctrl + /             | 单行注释 
+   Ctrl + Shift + A     | 块注释
