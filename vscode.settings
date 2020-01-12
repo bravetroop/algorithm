@@ -1,14 +1,25 @@
 1. settings.json:
 {
+    "editor.fontSize": 16,
+    "editor.renderControlCharacters": true,
+
     "C_Cpp.updateChannel": "Insiders",
-    "editor.fontSize": 20,
-    "workbench.colorTheme": "Monokai Dimmed",
+    "window.title": "${dirty}${activeEditorMedium}${separator}${rootName}",
+
+    "files.exclude": {
+        "**/.DS_Store": true,
+        "**/.git": true,
+        "**/.svn": true,
+    },
+
+    "workbench.editor.enablePreview": false,
+    "workbench.editor.enablePreviewFromQuickOpen": false,
 
     "workbench.colorCustomizations": {
     },
 
-    "workbench.editor.enablePreview": false,
-    "window.title": "${dirty}${activeEditorMedium}${separator}${rootName}",
+    "workbench.colorTheme": "Monokai Dimmed",
+    "sync.gist": "584bf98a452850e13826243ea39f3201",
 }
 
 2. 修改左侧侧边栏的字体大小：
