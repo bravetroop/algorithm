@@ -19,10 +19,8 @@
     },
 
     "workbench.colorTheme": "Monokai Dimmed",
-    "sync.gist": "584bf98a452850e13826243ea39f3201",
 }
 
 2. 修改左侧侧边栏的字体大小：
    查找workbench.desktop.main.css并修改.part>.content的属性值
-3. vscode-setting-sync gist token: 21c0e96e8d5574b25ec79ec6fb05c858098e8eea
 
