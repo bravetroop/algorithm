@@ -24,5 +24,5 @@
 
 2. 修改左侧侧边栏的字体大小：
    查找workbench.desktop.main.css并修改.part>.content的属性值
-3. vscode-setting-sync gist token: 6ab9836d5a550fba85b310f58eabbbd6a783a74b
+3. vscode-setting-sync gist token: 21c0e96e8d5574b25ec79ec6fb05c858098e8eea
 
