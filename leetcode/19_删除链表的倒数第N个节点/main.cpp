@@ -33,6 +33,7 @@ public:
             fast = fast->next;
         }
 
+        //slow指针至少比fast小一，所以slow和slow->next都不为空
         ListNode* tmp = slow->next->next;
         delete slow->next;
         slow->next = tmp;
