@@ -16,6 +16,8 @@
     "workbench.editor.enablePreviewFromQuickOpen": false,
 
     "workbench.colorCustomizations": {
+        "editor.lineHighlightBackground": "#71568f",
+        "editor.lineHighlightBorder": "#00000000" 
     },
 
     "workbench.colorTheme": "Monokai Dimmed",
