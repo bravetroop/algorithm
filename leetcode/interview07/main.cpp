@@ -26,7 +26,7 @@ public:
         int value = *preorder_begin;
         TreeNode* top = new TreeNode(value);
         
-        //value为子树的根节点，子树的根节点在中序遍历中，元素左边的是左子树，元素右边的是右子树
+        //value为子树的根节点，在中序遍历的时候，元素左边的是左子树，元素右边的是右子树
         auto it_mid = find(inorder_begin, inorder_end, value);
         //左子树长度
         int leftLen = it_mid - inorder_begin;
