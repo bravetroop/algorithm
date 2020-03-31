@@ -4,12 +4,17 @@ public:
         int num = 0;
         int split = 0;
 
+        if (IP.length() > 15) {
+            return false;
+        }
+
         for (int index = 0; index < IP.length(); ++index) {
             char ch = IP[index];
             //(192.168.0.1/192.168.1.0/192.168.1.01)
-            //点分十进制第一位是0,不是最后一位，并且当前0后面一位也不是'.',则返回false
+            //点分十进制第一位是0,并且不是最后一个数字，当前数字后面一位也不是'.',则返回false
             if ((num == 0 && ch == '0')
-                    && (index != IP.length()-1 && IP[index+1] != '.')) {
+                    && (index < IP.length()-1 
+                    && IP[index+1] != '.')) {
                 return false;
             } else if (isdigit(ch)) {
                 num = (num * 10) + (ch - '0');
@@ -18,9 +23,8 @@ public:
                     return false;
                 }
             } else if (ch == '.' 
-                        && IP[index+1] != '.'
-                        && index != IP.length()-1) {
-                //如果是'.',确保下一个字符不是'.'或字符串结尾
+                        && index < IP.length()-1
+                        && IP[index+1] != '.') {
                 num = 0;
                 ++split;
             } else {
@@ -34,6 +38,10 @@ public:
     bool isValidV6(string& IP) {
         int split = 0;
         int chLen = 0;
+
+        if (IP.length() > 39) {
+            return false;
+        }
 
         for (int index = 0; index < IP.length(); ++index) {
             char ch = IP[index];
