@@ -2,6 +2,7 @@
 {
     "editor.fontSize": 16,
     "editor.renderControlCharacters": true,
+    "editor.renderWhitespace": "all",
 
     "C_Cpp.updateChannel": "Insiders",
     "window.title": "${dirty}${activeEditorMedium}${separator}${rootName}",
@@ -11,6 +12,15 @@
         "**/.git": true,
         "**/.svn": true,
     },
+    
+    "search.exclude": {
+        "**/CI/**": true,
+        "**/hrslog": true,
+        "**/llt": true,
+        "**/pclint_script": true
+    }
+    
+    "files.autoGuessEncoding": true,
 
     "workbench.editor.enablePreview": false,
     "workbench.editor.enablePreviewFromQuickOpen": false,
