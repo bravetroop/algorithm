@@ -18,7 +18,7 @@
         "**/hrslog": true,
         "**/llt": true,
         "**/pclint_script": true
-    }
+    },
     
     "files.autoGuessEncoding": true,
 
