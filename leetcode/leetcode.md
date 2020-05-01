@@ -23,7 +23,7 @@
 
 ---
 
-### <span id="id_monoStack">单调栈</span>
+###<span id="id_monoStack">单调栈</span>
 <table>
   <tr>
     <td><a href="execise/01.md">01</a></td>
