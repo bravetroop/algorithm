@@ -1,5 +1,5 @@
 <!DOCTYPE html><html><head>
-      <title>leetcode</title>
+      <title>958</title>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       
@@ -263,119 +263,59 @@ pre[data-line] .line-highlight[data-end]:after {
     </head>
     <body for="html-export">
       <div class="mume markdown-preview  ">
-      <h1 class="mume-header" id="%E7%AE%97%E6%B3%95">&#x7B97;&#x6CD5;</h1>
+      <p>&#x7ED9;&#x5B9A;&#x4E00;&#x4E2A;&#x4E8C;&#x53C9;&#x6811;&#xFF0C;&#x786E;&#x5B9A;&#x5B83;&#x662F;&#x5426;&#x662F;&#x4E00;&#x4E2A;&#x5B8C;&#x5168;&#x4E8C;&#x53C9;&#x6811;&#x3002;</p>
+<p>&#x767E;&#x5EA6;&#x767E;&#x79D1;&#x4E2D;&#x5BF9;&#x5B8C;&#x5168;&#x4E8C;&#x53C9;&#x6811;&#x7684;&#x5B9A;&#x4E49;&#x5982;&#x4E0B;&#xFF1A;</p>
+<p>&#x82E5;&#x8BBE;&#x4E8C;&#x53C9;&#x6811;&#x7684;&#x6DF1;&#x5EA6;&#x4E3A; h&#xFF0C;&#x9664;&#x7B2C; h &#x5C42;&#x5916;&#xFF0C;&#x5176;&#x5B83;&#x5404;&#x5C42; (1&#xFF5E;h-1) &#x7684;&#x7ED3;&#x70B9;&#x6570;&#x90FD;&#x8FBE;&#x5230;&#x6700;&#x5927;&#x4E2A;&#x6570;&#xFF0C;&#x7B2C; h &#x5C42;&#x6240;&#x6709;&#x7684;&#x7ED3;&#x70B9;&#x90FD;&#x8FDE;&#x7EED;&#x96C6;&#x4E2D;&#x5728;&#x6700;&#x5DE6;&#x8FB9;&#xFF0C;&#x8FD9;&#x5C31;&#x662F;&#x5B8C;&#x5168;&#x4E8C;&#x53C9;&#x6811;&#x3002;&#xFF08;&#x6CE8;&#xFF1A;&#x7B2C; h &#x5C42;&#x53EF;&#x80FD;&#x5305;&#x542B; 1~ 2h &#x4E2A;&#x8282;&#x70B9;&#x3002;&#xFF09;</p>
+<p>&#x793A;&#x4F8B; 1&#xFF1A;</p>
+<p>&#x8F93;&#x5165;&#xFF1A;[1,2,3,4,5,6]<br>
+&#x8F93;&#x51FA;&#xFF1A;true<br>
+&#x89E3;&#x91CA;&#xFF1A;&#x6700;&#x540E;&#x4E00;&#x5C42;&#x524D;&#x7684;&#x6BCF;&#x4E00;&#x5C42;&#x90FD;&#x662F;&#x6EE1;&#x7684;&#xFF08;&#x5373;&#xFF0C;&#x7ED3;&#x70B9;&#x503C;&#x4E3A; {1} &#x548C; {2,3} &#x7684;&#x4E24;&#x5C42;&#xFF09;&#xFF0C;&#x4E14;&#x6700;&#x540E;&#x4E00;&#x5C42;&#x4E2D;&#x7684;&#x6240;&#x6709;&#x7ED3;&#x70B9;&#xFF08;{4,5,6}&#xFF09;&#x90FD;&#x5C3D;&#x53EF;&#x80FD;&#x5730;&#x5411;&#x5DE6;&#x3002;</p>
+<p>&#x793A;&#x4F8B; 2&#xFF1A;</p>
+<p>&#x8F93;&#x5165;&#xFF1A;[1,2,3,4,5,null,7]<br>
+&#x8F93;&#x51FA;&#xFF1A;false<br>
+&#x89E3;&#x91CA;&#xFF1A;&#x503C;&#x4E3A; 7 &#x7684;&#x7ED3;&#x70B9;&#x6CA1;&#x6709;&#x5C3D;&#x53EF;&#x80FD;&#x9760;&#x5411;&#x5DE6;&#x4FA7;&#x3002;</p>
+<pre data-role="codeBlock" data-info="c" class="language-c"><span class="token comment">/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */</span>
+ 
+class Solution <span class="token punctuation">{</span>
+public<span class="token operator">:</span>
+    <span class="token keyword">void</span> <span class="token function">traverseTree</span><span class="token punctuation">(</span>TreeNode<span class="token operator">*</span> root<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token constant">NULL</span> <span class="token operator">==</span> root<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">return</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token function">traverseTree</span><span class="token punctuation">(</span>root<span class="token operator">-&gt;</span>left<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        vec<span class="token punctuation">.</span><span class="token function">push_back</span><span class="token punctuation">(</span>root<span class="token operator">-&gt;</span>val<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">traverseTree</span><span class="token punctuation">(</span>root<span class="token operator">-&gt;</span>right<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-<ul>
-<li><a href="#id_monoStack">&#x5355;&#x8C03;&#x6808;</a></li>
-<li><a href="#id_join">&#x5E76;&#x67E5;&#x96C6;</a></li>
-<li><a href="#id_smoothWind">&#x6ED1;&#x52A8;&#x7A97;&#x53E3;</a></li>
-<li><a href="#id_preHash">&#x524D;&#x7F00;&amp;HASH</a></li>
-<li><a href="#id_diff">&#x5DEE;&#x5206;</a></li>
-<li><a href="#id_string">&#x6570;&#x7EC4;&#x548C;&#x5B57;&#x7B26;&#x4E32;</a></li>
-<li><a href="#id_tree">&#x6811;</a></li>
-<li>&#x641C;&#x7D22;<br>
-<a href="#id_dfs">&#x6DF1;&#x5EA6;&#x641C;&#x7D22;</a><br>
-<a href="#id_bfs">&#x5E7F;&#x5EA6;&#x641C;&#x7D22;</a></li>
-<li>&#x67E5;&#x627E;<br>
-<a href="#id_binarySearch">&#x4E8C;&#x5206;&#x67E5;&#x627E;</a></li>
-<li>&#x6392;&#x5E8F;<br>
-[&#x62D3;&#x6251;&#x6392;&#x5E8F;]</li>
-<li>[&#x5806;&#x548C;&#x6808;]</li>
-<li><a href="#id_dp">&#x52A8;&#x6001;&#x89C4;&#x5212;</a></li>
-<li>[&#x8D2A;&#x5FC3;&#x7B97;&#x6CD5;]</li>
-<li>[&#x5B57;&#x5178;&#x6811;]</li>
-</ul>
-<hr>
-<h3 class="mume-header" id="span-idid_monostack%E5%8D%95%E8%B0%83%E6%A0%88span"><span id="id_monoStack">&#x5355;&#x8C03;&#x6808;</span></h3>
+    bool <span class="token function">isValidBST</span><span class="token punctuation">(</span>TreeNode<span class="token operator">*</span> root<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token constant">NULL</span> <span class="token operator">==</span> root<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">return</span> true<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        
+        <span class="token function">traverseTree</span><span class="token punctuation">(</span>root<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-<table>
-  <tbody><tr>
-    <td>&#x9898;&#x76EE;</td><td>&#x7B80;&#x4ECB;</td>
-  </tr>
-  <tr>
-    <td><a href="execise/01.md">01</a></td>
-    <td></td>
-  </tr>
-  <tr>
-    <td><a href="execise/84.md">84</a></td>
-    <td></td>
-  </tr>
-  <tr>
-    <td><a href="execise/85.md">85</a></td>
-    <td>&#x7ED9;&#x5B9A;&#x4E00;&#x4E2A;&#x4EC5;&#x5305;&#x542B;&#xA0;0 &#x548C; 1 &#x7684;&#x4E8C;&#x7EF4;&#x4E8C;&#x8FDB;&#x5236;&#x77E9;&#x9635;&#xFF0C;&#x627E;&#x51FA;&#x53EA;&#x5305;&#x542B; 1 &#x7684;&#x6700;&#x5927;&#x77E9;&#x5F62;&#xFF0C;&#x5E76;&#x8FD4;&#x56DE;&#x5176;&#x9762;&#x79EF;</td>
-  </tr>
-  <tr>
-    <td><a href="execise/739.md">739</a></td>
-    <td></td>
-  </tr>
-</tbody></table>
-#### <span id="span-idid_join%E5%B9%B6%E6%9F%A5%E9%9B%86span" class="mume-header">&#x5E76;&#x67E5;&#x96C6;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">auto</span> it <span class="token operator">=</span> vec<span class="token punctuation">.</span><span class="token function">begin</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> it <span class="token operator">!=</span> vec<span class="token punctuation">.</span><span class="token function">end</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span> <span class="token operator">++</span>it<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">*</span>it <span class="token operator">&gt;=</span> <span class="token operator">*</span><span class="token punctuation">(</span>it<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token keyword">return</span> false<span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
 
-<h4 class="mume-header" id="span-idid_smoothwind%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3span"><span id="id_smoothWind">&#x6ED1;&#x52A8;&#x7A97;&#x53E3;</span></h4>
+        <span class="token keyword">return</span> true<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+private<span class="token operator">:</span>
+    vector<span class="token operator">&lt;</span><span class="token keyword">int</span><span class="token operator">&gt;</span> vec<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
 
-<h4 class="mume-header" id="span-idid_prehash%E5%89%8D%E7%BC%80hashspan"><span id="id_preHash">&#x524D;&#x7F00;&amp;HASH</span></h4>
-
-<h4 class="mume-header" id="span-idid_diff%E5%B7%AE%E5%88%86span"><span id="id_diff">&#x5DEE;&#x5206;</span></h4>
-
-<h4 class="mume-header" id="span-idid_string%E6%95%B0%E7%BB%84%E5%92%8C%E5%AD%97%E7%AC%A6%E4%B8%B2span"><span id="id_string">&#x6570;&#x7EC4;&#x548C;&#x5B57;&#x7B26;&#x4E32;</span></h4>
-
-<table>
-  <tbody><tr></tr>
-  <tr>
-    <td><a href="execise/48.md">48</a></td>
-    <td>&#x7ED9;&#x5B9A;&#x4E00;&#x4E2A; n &#xD7; n &#x7684;&#x4E8C;&#x7EF4;&#x77E9;&#x9635;&#x8868;&#x793A;&#x4E00;&#x4E2A;&#x56FE;&#x50CF;&#x3002;
-&#x5C06;&#x56FE;&#x50CF;&#x987A;&#x65F6;&#x9488;&#x65CB;&#x8F6C; 90 &#x5EA6;&#x3002;</td>
-  </tr>
-</tbody></table>
-#### <span id="span-idid_tree%E6%A0%91span" class="mume-header">&#x6811;</span>
-
-<table>
-  <tbody><tr></tr>
-  <tr>
-    <td><a href="execise/958.md">958</a></td>
-    <td>&#x7ED9;&#x5B9A;&#x4E00;&#x4E2A;&#x4E8C;&#x53C9;&#x6811;&#xFF0C;&#x786E;&#x5B9A;&#x5B83;&#x662F;&#x5426;&#x662F;&#x4E00;&#x4E2A;&#x5B8C;&#x5168;&#x4E8C;&#x53C9;&#x6811;&#x3002;</td>
-  </tr>
-</tbody></table>
-#### <span id="span-idid_dfs%E6%B7%B1%E5%BA%A6%E6%90%9C%E7%B4%A2span" class="mume-header">&#x6DF1;&#x5EA6;&#x641C;&#x7D22;</span>
-
-<table>
-</table>
-#### <span id="span-idid_bfs%E5%B9%BF%E5%BA%A6%E6%90%9C%E7%B4%A2span" class="mume-header">&#x5E7F;&#x5EA6;&#x641C;&#x7D22;</span>
-
-<table>
-</table>
-#### <span id="span-idid_binarysearch%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BEspan" class="mume-header">&#x4E8C;&#x5206;&#x67E5;&#x627E;</span>
-
-<table>
-</table>
-#### <span id="span-id%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8Fspan" class="mume-header">&#x62D3;&#x6251;&#x6392;&#x5E8F;</span>
-
-<table>
-</table>
-#### <span id="span-idid_dp%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92span" class="mume-header">&#x52A8;&#x6001;&#x89C4;&#x5212;</span>
-
-<table>
-  <tbody><tr>
-    <td>&#x9898;&#x76EE;</td><td>&#x7B80;&#x4ECB;</td>
-  </tr>
-  <tr>
-    <td><a href="execise/70.md">70</a></td>
-    <td>&#x5047;&#x8BBE;&#x4F60;&#x6B63;&#x5728;&#x722C;&#x697C;&#x68AF;&#x3002;&#x9700;&#x8981; n &#x9636;&#x4F60;&#x624D;&#x80FD;&#x5230;&#x8FBE;&#x697C;&#x9876;&#x3002;
-        &#x6BCF;&#x6B21;&#x4F60;&#x53EF;&#x4EE5;&#x722C; 1 &#x6216; 2 &#x4E2A;&#x53F0;&#x9636;&#x3002;&#x4F60;&#x6709;&#x591A;&#x5C11;&#x79CD;&#x4E0D;&#x540C;&#x7684;&#x65B9;&#x6CD5;&#x53EF;&#x4EE5;&#x722C;&#x5230;&#x697C;&#x9876;&#x5462;&#xFF1F;
-    </td>
-  </tr>
-  <tr>
-    <td><a href="execise/91.md">91</a></td>
-    <td>
-      &#x4E00;&#x6761;&#x5305;&#x542B;&#x5B57;&#x6BCD; A-Z &#x7684;&#x6D88;&#x606F;&#x901A;&#x8FC7;&#x4EE5;&#x4E0B;&#x65B9;&#x5F0F;&#x8FDB;&#x884C;&#x4E86;&#x7F16;&#x7801;&#xFF1A;
-      &apos;A&apos; -&gt; 1
-      &apos;B&apos; -&gt; 2
-      ...
-      &apos;Z&apos; -&gt; 26
-      &#x7ED9;&#x5B9A;&#x4E00;&#x4E2A;&#x53EA;&#x5305;&#x542B;&#x6570;&#x5B57;&#x7684;&#x975E;&#x7A7A;&#x5B57;&#x7B26;&#x4E32;&#xFF0C;&#x8BF7;&#x8BA1;&#x7B97;&#x89E3;&#x7801;&#x65B9;&#x6CD5;&#x7684;&#x603B;&#x6570;
-    </td>
-  </tr>
-</tbody></table>
+</pre>
       </div>
       
       
