@@ -3,7 +3,7 @@
 - [单调栈](#id_monoStack)
 - [并查集](#id_join)
 - [滑动窗口](#id_smoothWind)
-- [前缀&HASH](#id_preHash)
+- [前缀和HASH](#id_preHash)
 - [差分](#id_diff)
 - [数组和字符串](#id_string)
 - [链表](#id_linklist)
@@ -122,6 +122,7 @@
 |[55](exercise/55.md)|跳跃游戏|中等|
 |[300](exercise/300.md)|最长上升子序列|中等|dp / 贪心+二分|
 |[406](exercise/406.md)| 根据身高重建队列 |中等|
+|[452](exercise/452.md)|用最少数量的箭引爆气球|总等|
 |[1054](exercise/1054.md)|距离相等的条形码|中等|
 
 ####<span id="id_dict">字典树</span>
