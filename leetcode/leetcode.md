@@ -43,9 +43,10 @@
 |[1052](exercise/1052.md)|爱生气的书店老板|中等|需好好体会一下|
 |[1100](exercise/1100.md)|长度为 K 的无重复字符子串|中等|注意边界判断条件|
 
-####<span id="id_preHash">前缀&HASH</span>
+####<span id="id_preHash">前缀和HASH</span>
 | 题目 | 简介 | 难度　| 说明　|
 |---|---|--|--|
+|[974](exercise/974.md)|和可被 K 整除的子数组||中等|
 |[5405](exercise/5405.md)|形成两个异或相等数组的三元组数目|中等|
 
 ####<span id="id_diff">差分</span>
