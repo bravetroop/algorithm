@@ -1,6 +1,7 @@
 1. settings.json:
 {
     "editor.fontSize": 16,
+    "editor.lineHeight": 28,
     "editor.renderControlCharacters": true,
     "editor.renderWhitespace": "all",
 
@@ -26,7 +27,6 @@
     "workbench.editor.enablePreviewFromQuickOpen": false,
 
     "workbench.colorCustomizations": {
-        "editor.lineHighlightBackground": "#71568f",
         "editor.lineHighlightBorder": "#00000000" 
     },
 
