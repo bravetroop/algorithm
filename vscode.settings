@@ -31,6 +31,30 @@
     },
 
     "workbench.colorTheme": "Monokai Dimmed",
+
+   "fileheader.configObj": {
+        "atSymbol": "",
+        "specialOptions" : {
+            "Date": "Create"
+        },
+        "dateFormat": "YYYY-MM-DD",
+        "moveCursor": true,
+    },
+
+    "fileheader.customMade": { //文件头注释
+        "Copyright":"Co., Ltd. 2018-2020. All rights reserved.",
+        "Description": "",
+        "Author": "",
+        "Date": "",
+        "Notes":"",
+        "History":""
+    },
+
+    "fileheader.cursorMode": { //函数注释
+        "Description": "",
+        "Author": "",
+        "Date": ""
+    }
 }
 
 2. 修改左侧侧边栏的字体大小：
