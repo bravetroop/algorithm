@@ -4,6 +4,9 @@
     "editor.lineHeight": 28,
     "editor.renderControlCharacters": true,
     "editor.renderWhitespace": "all",
+    "editor.cursorBlinking": "blink",
+    "editor.comments.insertSpace": true,
+    "editor.copyWithSyntaxHighlighting": false,
 
     "C_Cpp.updateChannel": "Insiders",
     "window.title": "${dirty}${activeEditorMedium}${separator}${rootName}",
@@ -57,9 +60,11 @@
     }
 }
 
-2. 修改左侧侧边栏的字体大小：
+2. 可以CTRL+SHIFT+P打开defaultSettings.json参考其中的配置
+
+3. 修改左侧侧边栏的字体大小：
    查找workbench.desktop.main.css并修改monaco-workbench .part>.content的属性值
-3. 快捷键
+4. 快捷键
    Ctrl + Shift + P，F1 | 显示命令面板 Show Command Palette
    Ctrl + P             | 快速打开 Quick Open
    Ctrl + T             | 显示所有符号 Show all Symbols
