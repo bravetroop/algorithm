@@ -1,26 +1,26 @@
 # 算法
 
-- [位与](#id_bitAnd)
 - [单调栈](#id_monoStack)
 - [并查集](#id_join)
 - [滑动窗口](#id_smoothWind)
-- [前缀和HASH](#id_preHash)
-- [差分](#id_diff)
-- [数组和字符串](#id_string)
-- [链表](#id_linklist)
-- [递归](#id_recursive)
 - 搜索
   [深度搜索](#id_dfs)
   [广度搜索](#id_bfs)
-- [树](#id_tree)
 - [字典树](#id_dict)
-- 查找
-  [二分查找](#id_binarySearch)
 - 排序
   [拓扑排序](#id_topologyRange)
-- [堆和栈](#id_stack)
 - [动态规划](#id_dp)
 - [贪心算法](#id_greedy)
+- [堆和栈](#id_stack)
+- 查找
+  [二分查找](#id_binarySearch)
+- [递归](#id_recursive)
+- [树](#id_tree)
+- [前缀和HASH](#id_preHash)
+- [数组和字符串](#id_string)
+- [链表](#id_linklist)
+- [位与](#id_bitAnd)
+- [差分](#id_diff)
 
 ---
 
