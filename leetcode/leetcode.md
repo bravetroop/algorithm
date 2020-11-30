@@ -4,8 +4,8 @@
 - [并查集](#id_join)
 - [滑动窗口](#id_smoothWind)
 - 搜索
-  [深度搜索](#id_dfs)
   [广度搜索](#id_bfs)
+  [深度搜索](#id_dfs)
 - [字典树](#id_dict)
 - 排序
   [拓扑排序](#id_topologyRange)
@@ -42,6 +42,7 @@
 | 题目 | 简介 | 难度　| 说明　|
 |---|---|--|--|
 |[547](exercise/547.md)|朋友圈|中等||
+|[1319](exercise/1319.md)|连通网络的操作次数|中等||
 
 ####<span id="id_smoothWind">滑动窗口</span>
 | 题目 | 简介 | 难度　| 说明　|
