@@ -36,6 +36,7 @@
 |[42](exercise/42.md)|接雨水|困难|
 |[84](exercise/84.md)|柱状图中最大的矩形|困难||
 |[85](exercise/85.md)|最大矩形|困难||
+|[402](exercise/402.md)|移掉K位数字|中等|
 |[739](exercise/739.md)|每日温度|中等|
 
 ####<span id="id_join">并查集</span>
